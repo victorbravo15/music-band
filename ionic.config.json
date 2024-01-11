@@ -1,0 +1,8 @@
+{
+  "name": "musicBand",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "80957296"
+}
