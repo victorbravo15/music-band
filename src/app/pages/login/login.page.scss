@@ -1,0 +1,58 @@
+ion-content {
+    --padding-top: 40%;
+    --padding-start: 10%;
+    --padding-end: 10%;
+    --background: url('https://www.radiochevere.com/image/bgcontrol.jpg') 0 0/100% 100% no-repeat;
+}
+
+.fallback {
+    margin: 20px;
+    text-align: center;
+}
+
+.btn {
+    padding-top: 40px;
+}
+
+@media only screen and (min-width: 768px) {
+
+    ion-content {
+        --padding-top: 18%;
+        --padding-start: 10%;
+        --padding-end: 10%;
+    }
+
+    ion-grid {
+        border-radius: 10px;
+        width: 80%;
+        max-width: 400px;
+    }
+
+    .formContainer {
+        margin: 0 auto; // Centra el contenido.
+        padding: 20px;
+        border-radius: 10px;
+        background-color: rgba(211, 211, 211, 0.753);
+    }
+    
+    ion-item {
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+
+    #recordar{
+        font-size: small;  
+        // float: left;
+        --background: transparent ;
+    }
+
+
+    .cb{
+        clear: both;
+    }
+
+    
+
+        
+
+}

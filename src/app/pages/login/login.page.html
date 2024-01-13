@@ -1,0 +1,47 @@
+<ion-content>
+  <ion-grid>
+
+        <div class="formContainer">
+          <form (ngSubmit)="login()" (keyup.enter)="login()" [formGroup]="credentials">
+
+            <ion-item>
+              <ion-input [(ngModel)]="username" value='username' type="email" placeholder="Email" formControlName="email"></ion-input>
+            </ion-item>
+
+            <div *ngIf="(email?.dirty || email?.touched) && email?.errors" class="errors">
+              <span *ngIf="email?.errors?.['required']">Correo obligatorio</span>
+              <span *ngIf="email?.errors?.['email']">Correo incorrecto</span>
+            </div>
+            <ion-item>
+              <ion-input [(ngModel)]="pass" value='pass' [type]="showPassword ? 'text' : 'password'" placeholder="Password" formControlName="password"></ion-input>
+              <ion-icon slot="end" [name]= "passwordToggleIcon" (click)="tooglePassword()"></ion-icon>
+            </ion-item>
+            <div *ngIf="(password?.dirty || password?.touched) && password?.errors" class="errors">
+              <span *ngIf="password?.errors?.['required']">Contraseña obligatoria</span>
+              <span *ngIf="password?.errors?.['minlength']">La contraseña debe ser de al menos 6 caracteres</span>
+            </div>
+            <ion-item lines="none" id="recordar">
+              <ion-checkbox style="margin-right: 10px;" formControlName="recordar"></ion-checkbox>
+              <ion-label>Recordar Usuario</ion-label>
+            </ion-item>
+            <div class="cb"></div>
+
+            <div class="fallback">
+              <ion-button type="submit" expand="block" [disabled]="!credentials.valid">Iniciar sesion</ion-button>
+              <ion-button (click)="createUser()" type="button" expand="block" color="light" fill="clear">¿No estas registrado? Registrese!
+              </ion-button>
+
+              <!-- <ion-button type="button" expand="block" color="tertiary">
+                <ion-icon name="logo-google" slot="start"></ion-icon>
+                Iniciar sesion con Google
+              </ion-button>
+              <ion-button type="button" expand="block" color="tertiary">
+                <ion-icon name="logo-apple" slot="start"></ion-icon>
+                Iniciar sesion con Apple
+              </ion-button> -->
+            </div>
+
+          </form>
+        </div>
+  </ion-grid>
+</ion-content>
