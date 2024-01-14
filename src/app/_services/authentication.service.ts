@@ -25,6 +25,7 @@ export class AuthenticationService {
   logoutTimer = new BehaviorSubject(0)
 
   constructor (private http: HttpClient, private router: Router, private storage: Storage) {
+    this.initStorage()
     this.loadUser()
 
     if (this.logoutTimer.value > 0) {
@@ -37,7 +38,6 @@ export class AuthenticationService {
   }
 
   private async loadUser () {
-    await this.initStorage()
     if (this.storage) {
       const data = await this.storage.get(USER_KEY)
       if (data && data.value) {
