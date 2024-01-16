@@ -17,7 +17,7 @@ const encKey = 'NVDDf#QXv08Nm@HA'
   providedIn: 'root'
 })
 export class AuthenticationService {
-  isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
+  isAuthenticated: BehaviorSubject<any> = new BehaviorSubject<any>(null)
   token = ''
   private baseUrl = environment.apiUrl
   private user: User | undefined
@@ -35,13 +35,22 @@ export class AuthenticationService {
 
   private async initStorage () {
     await this.storage.create()// Asegúrate de que la base de datos esté creada
+    const data = await this.storage.get(USER_KEY)
+    if (data) {
+      const user = JSON.parse(data)
+      this.user = user
+      this.token = user.jwt
+      this.isAuthenticated.next(true)
+    } else {
+      this.isAuthenticated.next(false)
+    }
   }
 
   private async loadUser () {
     if (this.storage) {
       const data = await this.storage.get(USER_KEY)
-      if (data && data.value) {
-        const user = JSON.parse(data.value)
+      if (data) {
+        const user = JSON.parse(data)
         this.user = user
         this.token = user.jwt
         this.isAuthenticated.next(true)
@@ -95,12 +104,12 @@ export class AuthenticationService {
 
   async getMail () {
     const mail = await this.storage.get('MAIL_KEY')
-    return mail ? mail.value : null
+    return mail || null
   }
 
   async getPass () {
     const pass = await this.storage.get('PASS_KEY')
-    return pass ? pass.value : null
+    return pass || null
   }
 
   async removePass_User () {
