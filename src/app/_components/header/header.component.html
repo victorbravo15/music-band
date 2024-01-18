@@ -1,0 +1,34 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button *ngIf="showBackButton"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <img src="{{ imageUrl }}" alt="Logo" class="logo-img" (click)="navigateToRoot()">
+    </ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-header>
+  <!-- Barra de herramientas con el botón de flecha hacia atrás -->
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+
+    <ion-row class="ion-align-items-center ion-justify-content-center">
+      <ion-col size="auto">
+        <ion-title class="ion-text-center"> Asociación Musical San Roque </ion-title>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-align-items-center ion-justify-content-center">
+      <ion-col size="auto">
+        <ion-img
+          src="{{ imageUrl }}"
+          alt="Logo"
+        ></ion-img>
+        <!-- Ajusta el valor de max-width según tus necesidades -->
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
