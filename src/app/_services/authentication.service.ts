@@ -12,6 +12,7 @@ import { Storage } from '@ionic/storage-angular'
 // const { App } = Plugins
 const USER_KEY = 'user'
 const encKey = 'NVDDf#QXv08Nm@HA'
+const DATE_KEY = 'loginDate'
 
 @Injectable({
   providedIn: 'root'
@@ -36,13 +37,17 @@ export class AuthenticationService {
   private async initStorage () {
     await this.storage.create()// Asegúrate de que la base de datos esté creada
     const data = await this.storage.get(USER_KEY)
-    if (data) {
+    const date = await this.storage.get(DATE_KEY)
+    const elapsedMilliseconds = new Date().getTime() - date
+    const eightHoursInMillis = 8 * 60 * 60 * 1000 // 8 hours in milliseconds
+    if (data && elapsedMilliseconds <= eightHoursInMillis) {
       const user = JSON.parse(data)
       this.user = user
       this.token = user.jwt
       this.isAuthenticated.next(true)
     } else {
       this.isAuthenticated.next(false)
+      this.logout()
     }
   }
 
@@ -81,6 +86,7 @@ export class AuthenticationService {
       await this.storage.set('MAIL_KEY', credentials.email)
       await this.storage.set('PASS_KEY', this.encript)
     }
+    this.storage.set(DATE_KEY, new Date().getTime())
 
     const r = this.http.post(this.baseUrl + 'user/login', body, { headers })
 

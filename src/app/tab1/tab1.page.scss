@@ -1,0 +1,40 @@
+.custom-card {
+    background-color: #C6C6E0;
+    border: 1px solid rgba(0, 0, 0, 0.15); /* Puedes ajustar el color y el grosor del borde según tus preferencias */
+  }
+
+  .custom-card ion-card-title {
+    color: rgb(0, 0, 26);
+  }
+  
+  .custom-img {
+    max-width: 100%;
+    height: auto;
+    /* Agrega otros estilos de imagen según sea necesario */
+  }
+
+  /* Ajustar altura específica para pantallas pequeñas */
+@media screen and (max-width: 576px) {
+    .custom-img {
+      height: 100px; /* Ajustar altura según tus necesidades */
+    }
+  }
+  
+  /* Ajustar altura específica para pantallas medianas */
+  @media screen and (min-width: 577px) and (max-width: 768px) {
+    .custom-img {
+      height: 150px; /* Ajustar altura según tus necesidades */
+    }
+  }
+  
+  /* Ajustar altura específica para pantallas grandes y extra grandes */
+  @media screen and (min-width: 769px) {
+    .custom-img {
+      height: 200px; /* Ajustar altura según tus necesidades */
+    }
+  }
+
+  ion-content {
+    --background: rgb(0, 0, 26) url('../../assets/lira.jpg') no-repeat center center fixed;
+    background-size: cover;
+  }

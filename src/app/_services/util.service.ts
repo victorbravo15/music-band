@@ -30,4 +30,12 @@ export class UtilService {
 
     await alert.present()
   }
+
+  isSmallScreen (): boolean {
+    // Obtener el ancho de la pantalla
+    const anchoPantalla = window.innerWidth
+
+    // Verificar si el ancho es menor de 850 píxeles
+    return anchoPantalla < 850
+  }
 }
