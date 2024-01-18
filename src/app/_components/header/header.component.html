@@ -1,14 +1,3 @@
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button *ngIf="showBackButton"></ion-back-button>
-    </ion-buttons>
-    <ion-title>
-      <img src="{{ imageUrl }}" alt="Logo" class="logo-img" (click)="navigateToRoot()">
-    </ion-title>
-  </ion-toolbar>
-</ion-header> -->
-
 <ion-header>
   <!-- Barra de herramientas con el botón de flecha hacia atrás -->
   <ion-toolbar>
@@ -30,5 +19,9 @@
         <!-- Ajusta el valor de max-width según tus necesidades -->
       </ion-col>
     </ion-row>
+
+    <ion-buttons slot="end">
+      <ion-button>Salir</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
