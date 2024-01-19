@@ -1,7 +1,7 @@
 <ion-header>
   <!-- Barra de herramientas con el botón de flecha hacia atrás -->
   <ion-toolbar>
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" *ngIf="showBackButton">
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
 
@@ -10,7 +10,7 @@
         <ion-title class="ion-text-center"> Asociación Musical San Roque </ion-title>
       </ion-col>
     </ion-row>
-    <ion-row class="ion-align-items-center ion-justify-content-center">
+    <ion-row class="ion-align-items-center ion-justify-content-center" (click)="navigateToRoot()">
       <ion-col size="auto">
         <ion-img
           src="{{ imageUrl }}"
@@ -20,7 +20,7 @@
       </ion-col>
     </ion-row>
 
-    <ion-buttons slot="end">
+    <ion-buttons slot="end" *ngIf="showExitButton">
       <ion-button>Salir</ion-button>
     </ion-buttons>
   </ion-toolbar>

@@ -1,4 +1,5 @@
 /* eslint-disable no-useless-constructor */
+import { CommonModule } from '@angular/common'
 import { Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
@@ -8,10 +9,11 @@ import { IonicModule } from '@ionic/angular'
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   standalone: true,
-  imports: [IonicModule]
+  imports: [IonicModule, CommonModule]
 })
 export class HeaderComponent {
   @Input() showBackButton: boolean = false
+  @Input() showExitButton: boolean = false
   @Input() imageUrl: string = '../../../assets/logo.jpg'
 
   constructor (private router: Router) {}

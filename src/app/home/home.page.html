@@ -1,14 +1,17 @@
-<app-header [showBackButton]="true"></app-header>
+<app-header [showBackButton]="false" [showExitButton]="true"></app-header>
 
 <ion-content [fullscreen]="true">
   <ion-row>
     <!-- Para pantallas grandes (size="3") -->
     <ion-col size-lg="3" class="ion-hide-xsm-down">
+      
       <ion-card class="custom-card">
+        <ion-button (click)="onClick()">
         <ion-card-content class="ion-text-center">
           <ion-img src="../../assets/trompeta.png" alt="Trompeta" class="custom-img"></ion-img>
           <ion-card-title class="ion-margin-top">Trompeta</ion-card-title>
         </ion-card-content>
+      </ion-button>
       </ion-card>
     </ion-col>
 
