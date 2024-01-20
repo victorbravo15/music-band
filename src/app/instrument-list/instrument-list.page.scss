@@ -1,0 +1,54 @@
+.table-container {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    margin: auto;
+    padding: 10px;
+  }
+
+  .header-table-color {
+    background-color: #8f7303 !important;
+    font-weight: bold;
+  }
+  
+  .mat-form-field {
+    margin-right: 15px;
+    margin-bottom: 20px;
+    width: 200px;
+  }
+  
+  .mat-table {
+    overflow-x: scroll;
+}
+  
+  .mat-paginator {
+    background-color: white;
+    min-height: 48px;
+  }
+  
+  
+  .mat-select-arrow {
+    color: #333;
+  }
+
+  ion-content {
+    --background: rgb(0, 0, 26) url("../../assets/lira.jpg") no-repeat center
+      center fixed;
+    background-size: cover;
+  }
+
+  input{
+    text-align: center;
+    background-color: #c6c6e0;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    margin: 10px;
+}
+
+ion-title{
+  margin-top: 5px;
+  text-align: center;
+}

@@ -8,6 +8,12 @@ import { InstrumentListPageRoutingModule } from './instrument-list-routing.modul
 
 import { InstrumentListPage } from './instrument-list.page'
 import { HeaderComponent } from '../_components/header/header.component'
+import { MatPaginatorModule } from '@angular/material/paginator'
+import { MatSortModule } from '@angular/material/sort'
+import { MatTableModule } from '@angular/material/table'
+import { MatInputModule } from '@angular/material/input'
+import { MatButtonModule } from '@angular/material/button'
+import { MatIconModule } from '@angular/material/icon'
 
 @NgModule({
   imports: [
@@ -15,8 +21,16 @@ import { HeaderComponent } from '../_components/header/header.component'
     FormsModule,
     IonicModule,
     InstrumentListPageRoutingModule,
-    HeaderComponent
+    HeaderComponent,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatInputModule,
+    CommonModule,
+    InstrumentListPage,
+    MatButtonModule,
+    MatIconModule
   ],
-  declarations: [InstrumentListPage]
+  declarations: []
 })
 export class InstrumentListPageModule {}
