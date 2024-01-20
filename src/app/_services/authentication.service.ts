@@ -105,7 +105,8 @@ export class AuthenticationService {
 
   async logout (): Promise<void> {
     this.isAuthenticated.next(false)
-    return await this.storage.remove(USER_KEY)
+    await this.storage.remove(USER_KEY)
+    this.router.navigateByUrl('/')
   }
 
   async getMail () {

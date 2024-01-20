@@ -1,8 +1,9 @@
 <ion-header>
   <!-- Barra de herramientas con el botón de flecha hacia atrás -->
   <ion-toolbar>
-    <ion-buttons slot="start" *ngIf="showBackButton">
-      <ion-back-button defaultHref="/"></ion-back-button>
+    <ion-buttons slot="start">
+      <ion-back-button *ngIf="showBackButton" defaultHref="/"></ion-back-button>
+      <ion-button *ngIf="!showBackButton" [style.visibility]="'hidden'">SALIR</ion-button>
     </ion-buttons>
 
     <ion-row class="ion-align-items-center ion-justify-content-center">
@@ -21,7 +22,7 @@
     </ion-row>
 
     <ion-buttons slot="end" *ngIf="showExitButton">
-      <ion-button>Salir</ion-button>
+      <ion-button (click)="logout()">Salir</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common'
 import { Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
+import { AuthenticationService } from 'src/app/_services/authentication.service'
 
 @Component({
   selector: 'app-header',
@@ -16,9 +17,13 @@ export class HeaderComponent {
   @Input() showExitButton: boolean = false
   @Input() imageUrl: string = '../../../assets/logo.jpg'
 
-  constructor (private router: Router) {}
+  constructor (private router: Router, private authService: AuthenticationService) {}
 
   navigateToRoot () {
     this.router.navigateByUrl('/')
+  }
+
+  logout () {
+    return this.authService.logout()
   }
 }
