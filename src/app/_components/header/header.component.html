@@ -2,27 +2,23 @@
   <!-- Barra de herramientas con el botón de flecha hacia atrás -->
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button *ngIf="showBackButton" defaultHref="/"></ion-back-button>
-      <ion-button *ngIf="!showBackButton" [style.visibility]="'hidden'">SALIR</ion-button>
+      <ion-back-button [disabled]="!showBackButton" defaultHref="/"></ion-back-button>
     </ion-buttons>
 
     <ion-row class="ion-align-items-center ion-justify-content-center">
-      <ion-col size="auto">
+      <ion-col size="12">
         <ion-title class="ion-text-center"> Asociación Musical San Roque </ion-title>
       </ion-col>
     </ion-row>
     <ion-row class="ion-align-items-center ion-justify-content-center" (click)="navigateToRoot()">
       <ion-col size="auto">
-        <ion-img
-          src="{{ imageUrl }}"
-          alt="Logo"
-        ></ion-img>
+        <ion-img src="{{ imageUrl }}" alt="Logo"></ion-img>
         <!-- Ajusta el valor de max-width según tus necesidades -->
       </ion-col>
     </ion-row>
 
-    <ion-buttons slot="end" *ngIf="showExitButton">
-      <ion-button (click)="logout()">Salir</ion-button>
+  <ion-buttons slot="end">
+      <ion-button (click)="logout()" [disabled]="!showExitButton" >Salir</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
-import { RouteReuseStrategy } from '@angular/router'
 
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular'
+import { IonicModule } from '@ionic/angular'
 
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
@@ -11,12 +10,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { IonicStorageModule } from '@ionic/storage-angular'
 import { HeaderComponent } from './_components/header/header.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { HashLocationStrategy, LocationStrategy } from '@angular/common'
 
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
     HttpClientModule, FormsModule, ReactiveFormsModule, IonicStorageModule.forRoot(), HeaderComponent, BrowserAnimationsModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

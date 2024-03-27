@@ -22,9 +22,9 @@
       <ng-container matColumnDef="action">
         <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header> Acción </th>
         <td mat-cell *matCellDef="let element">
-          <a id="{{element.url}}" href="{{element.url}}" download="{{element.name + '.pdf'}}" style="display: none;"></a>
+          <a id="{{element.url}}" href="{{element.url}}" media="print" style="display: none;"></a>
           <button mat-icon-button type="button" (click)="descargarArchivo(element)">
-            <ion-icon name="cloud-download">Descargar</ion-icon>
+            <ion-icon name="print">Descargar</ion-icon>
           </button>
         </td>
       </ng-container>

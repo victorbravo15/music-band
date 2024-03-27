@@ -9,7 +9,26 @@ import { Router } from '@angular/router'
 export class HomePage {
   constructor (private router: Router) { }
 
-  onClick () {
+  public instrumentos: string[] = [
+    'DIRECTOR',
+    'BOMBO PLATILLOS',
+    'CAJA',
+    'PERCUSION',
+    'TUBA',
+    'BOMBARDINO',
+    'TROMBON',
+    'TROMPA',
+    'TROMPETA',
+    'FLISCORNO',
+    'SAXO ALTO',
+    'CLARINETE',
+    'FLAUTA',
+    'SAXO SOPRANO',
+    'SAXO BARITONO',
+    'SAXO TENOR'
+  ]
+
+  public onClick (): void {
     this.router.navigateByUrl('instrument-list')
   }
 }
