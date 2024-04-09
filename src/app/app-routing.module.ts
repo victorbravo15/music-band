@@ -16,12 +16,12 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule),
+    loadChildren: () => import('./pages/home/home.module').then(m => m.HomePageModule),
     canLoad: [AuthGuard]
   },
   {
     path: 'instrument-list',
-    loadChildren: () => import('./instrument-list/instrument-list.module').then(m => m.InstrumentListPageModule),
+    loadChildren: () => import('./pages/instrument-list/instrument-list.module').then(m => m.InstrumentListPageModule),
     canLoad: [AuthGuard]
   }
 

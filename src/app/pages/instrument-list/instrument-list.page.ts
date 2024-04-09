@@ -4,13 +4,14 @@ import { Component, ViewChild, OnInit } from '@angular/core'
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator'
 import { MatSort, MatSortModule } from '@angular/material/sort'
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
-import { HeaderComponent } from '../_components/header/header.component'
+import { HeaderComponent } from '../../_components/header/header.component'
 
 import { MatInputModule } from '@angular/material/input'
 import { IonicModule } from '@ionic/angular'
 import { FormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
-import { FileService } from '../_services/file.service'
+import { Storage } from '@ionic/storage-angular'
+import { Router } from '@angular/router'
 
 @Component({
   standalone: true,
@@ -26,16 +27,28 @@ import { FileService } from '../_services/file.service'
     IonicModule,
     MatButtonModule]
 })
+
 export class InstrumentListPage implements OnInit {
-  constructor (private fileService: FileService) {}
+  constructor (private router: Router, private storage: Storage) {
+    this.instrument = ''
+    this.storage.get('INSTRUMENT').then((valor) => {
+      this.instrument = valor as string
+    }).catch((error) => {
+      console.error('Ocurrió un error:', error)
+      this.router.navigateByUrl('home')
+    })
+  }
+
   displayedColumns: string[] = ['name', 'author', 'action']
   // eslint-disable-next-line no-use-before-define
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA)
 
   @ViewChild(MatPaginator) paginator!: MatPaginator
   @ViewChild(MatSort) sort!: MatSort
+  private instrument: string
 
   ngOnInit () {
+    console.log(this.instrument)
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort
   }

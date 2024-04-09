@@ -117,7 +117,6 @@ export class LoginPage implements OnInit {
     await loading.present()
     this.user.username = this.username
     this.user.password = this.pass
-    // this.credentials.controls.password.value;
 
     const p = new Promise(
       resolve => {

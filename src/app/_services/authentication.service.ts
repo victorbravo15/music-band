@@ -11,6 +11,7 @@ import { Storage } from '@ionic/storage-angular'
 
 // const { App } = Plugins
 const USER_KEY = 'user'
+const USER_ROLES = 'ROLES'
 const encKey = 'NVDDf#QXv08Nm@HA'
 const DATE_KEY = 'loginDate'
 
@@ -93,6 +94,7 @@ export class AuthenticationService {
     const call = r.pipe(
       map((data: any) => data),
       switchMap(user => {
+        this.storage.set(USER_ROLES, this.setEncrypt(user.roles ?? ''))
         return from(this.storage.set(USER_KEY, JSON.stringify(user)))
       }),
       tap(_ => {
@@ -106,6 +108,8 @@ export class AuthenticationService {
   async logout (): Promise<void> {
     this.isAuthenticated.next(false)
     await this.storage.remove(USER_KEY)
+    await this.storage.remove(USER_ROLES)
+    await this.storage.remove('INSTRUMENT')
     this.router.navigateByUrl('/')
   }
 
@@ -186,5 +190,22 @@ export class AuthenticationService {
     const r = this.http.put(this.baseUrl + 'user/adduser', user, { headers })
 
     return r
+  }
+
+  public async isRole (instrument: string): Promise<boolean> {
+    let userRoles: string|null = ''
+    const roles = await this.storage.get(USER_ROLES)
+    userRoles = this.getEncrypt(roles as string)
+    const userRolesList = userRoles?.split(';')
+    if (userRolesList?.includes('DIRECTOR')) {
+      return true
+    } else if (userRolesList?.includes(instrument)) {
+      return true
+    }
+    return false
+  }
+
+  refreshPage () {
+    window.location.href = window.location.pathname + '?random=' + Math.random()
   }
 }

@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular'
 import { InstrumentListPageRoutingModule } from './instrument-list-routing.module'
 
 import { InstrumentListPage } from './instrument-list.page'
-import { HeaderComponent } from '../_components/header/header.component'
+import { HeaderComponent } from '../../_components/header/header.component'
 import { MatPaginatorModule } from '@angular/material/paginator'
 import { MatSortModule } from '@angular/material/sort'
 import { MatTableModule } from '@angular/material/table'

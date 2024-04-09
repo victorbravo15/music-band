@@ -11,14 +11,8 @@
   color: rgb(0, 0, 26);
 }
 
-.custom-img {
-  max-width: 100%;
-  max-height: 290px;
-  /* Agrega otros estilos de imagen según sea necesario */
-}
-
 ion-content {
-  --background: rgb(0, 0, 26) url("../../assets/lira.jpg") no-repeat center
+  --background: rgb(0, 0, 26) url("../../../assets/lira.jpg") no-repeat center
     center fixed;
   background-size: cover;
 }
