@@ -1,8 +1,12 @@
 <app-header [showBackButton]="true"></app-header>
 
 <ion-content [fullscreen]="true" *ngIf="dataSource">
-  <ion-title>Trompetas</ion-title>
+  <ion-title>{{instrument}}</ion-title>
   <div class="table-container mat-elevation-z8">
+    <ion-item *ngIf="uploadAvaliable">
+      <ion-label position="stacked">Cargar Archivo</ion-label>
+      <ion-input type="file" (change)="handleUpload($event)"></ion-input>
+    </ion-item>
     <input matInput (keyup)="applyFilter($event)" placeholder="Buscar en la tabla" >
     <table mat-table [dataSource]="dataSource" matSort class="mat-table">
 

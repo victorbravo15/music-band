@@ -7,11 +7,14 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table'
 import { HeaderComponent } from '../../_components/header/header.component'
 
 import { MatInputModule } from '@angular/material/input'
-import { IonicModule } from '@ionic/angular'
+import { IonicModule, LoadingController } from '@ionic/angular'
 import { FormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { Storage } from '@ionic/storage-angular'
 import { Router } from '@angular/router'
+import { FileService } from 'src/app/_services/file.service'
+import { UtilService } from 'src/app/_services/util.service'
+import { AuthenticationService } from 'src/app/_services/authentication.service'
 
 @Component({
   standalone: true,
@@ -29,7 +32,7 @@ import { Router } from '@angular/router'
 })
 
 export class InstrumentListPage implements OnInit {
-  constructor (private router: Router, private storage: Storage) {
+  constructor (private router: Router, private storage: Storage, private fileService: FileService, private loadingController: LoadingController, private util: UtilService, private authService: AuthenticationService) {
     this.instrument = ''
     this.storage.get('INSTRUMENT').then((valor) => {
       this.instrument = valor as string
@@ -39,18 +42,20 @@ export class InstrumentListPage implements OnInit {
     })
   }
 
-  displayedColumns: string[] = ['name', 'author', 'action']
+  public uploadAvaliable: boolean = false
+  public displayedColumns: string[] = ['name', 'author', 'action']
   // eslint-disable-next-line no-use-before-define
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA)
+  public dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA)
 
   @ViewChild(MatPaginator) paginator!: MatPaginator
   @ViewChild(MatSort) sort!: MatSort
-  private instrument: string
+  public instrument: string
 
-  ngOnInit () {
+  async ngOnInit () {
     console.log(this.instrument)
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort
+    this.uploadAvaliable = await this.authService.isRole('DIRECTOR')
   }
 
   applyFilter (event: Event) {
@@ -70,6 +75,43 @@ export class InstrumentListPage implements OnInit {
     if (enlace) {
       enlace.click()
     }
+  }
+
+  async handleUpload (event: any) {
+    console.log('hola')
+    const file = event.target.files[0]
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('instrument', this.instrument)
+
+    const loading = await this.loadingController.create({
+      message: 'Subiendo archivo, por favor espere...'
+    })
+    await loading.present()
+
+    // eslint-disable-next-line no-unused-vars
+    const p = new Promise(
+      resolve => {
+        const r = this.fileService.uploadFile(formData)
+
+        r.subscribe(resp => {
+          const dOut = resp
+          if (dOut == null) {
+            loading.dismiss()
+            this.util.showAlertOk('Error', 'Error al crear el comentario')
+          } else {
+            loading.dismiss()
+            this.util.showAlertOk('Creado', 'Comentario creado satisfactoriamente')
+          }
+
+          resolve(true)
+        },
+        () => {
+          loading.dismiss()
+          resolve(false)
+        })
+      }
+    )
   }
 }
 
