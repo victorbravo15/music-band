@@ -15,6 +15,7 @@ import { Router } from '@angular/router'
 import { FileService } from 'src/app/_services/file.service'
 import { UtilService } from 'src/app/_services/util.service'
 import { AuthenticationService } from 'src/app/_services/authentication.service'
+import { IDocumentDto } from 'src/app/models/iDocumentDto'
 
 @Component({
   standalone: true,
@@ -34,6 +35,12 @@ import { AuthenticationService } from 'src/app/_services/authentication.service'
 export class InstrumentListPage implements OnInit {
   constructor (private router: Router, private storage: Storage, private fileService: FileService, private loadingController: LoadingController, private util: UtilService, private authService: AuthenticationService) {
     this.instrument = ''
+    this.docDto = {
+      author: '',
+      id: 0,
+      title: '',
+      url: ''
+    }
     this.storage.get('INSTRUMENT').then((valor) => {
       this.instrument = valor as string
     }).catch((error) => {
@@ -42,6 +49,7 @@ export class InstrumentListPage implements OnInit {
     })
   }
 
+  public docDto: IDocumentDto
   public uploadAvaliable: boolean = false
   public displayedColumns: string[] = ['name', 'author', 'action']
   // eslint-disable-next-line no-use-before-define
@@ -52,7 +60,6 @@ export class InstrumentListPage implements OnInit {
   public instrument: string
 
   async ngOnInit () {
-    console.log(this.instrument)
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort
     this.uploadAvaliable = await this.authService.isRole('DIRECTOR')
@@ -78,11 +85,11 @@ export class InstrumentListPage implements OnInit {
   }
 
   async handleUpload (event: any) {
-    console.log('hola')
     const file = event.target.files[0]
     const formData = new FormData()
     formData.append('file', file)
     formData.append('instrument', this.instrument)
+    formData.append('docDto', JSON.stringify(this.docDto))
 
     const loading = await this.loadingController.create({
       message: 'Subiendo archivo, por favor espere...'

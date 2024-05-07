@@ -4,29 +4,46 @@
   <ion-title>{{instrument}}</ion-title>
   <div class="table-container mat-elevation-z8">
     <ion-item *ngIf="uploadAvaliable">
-      <ion-label position="stacked">Cargar Archivo</ion-label>
-      <ion-input type="file" (change)="handleUpload($event)"></ion-input>
+      <ion-row>
+        <ion-col>
+          <ion-input label="Titulo" labelPlacement="floating" placeholder="Titulo"
+            [(ngModel)]="docDto.title"></ion-input>
+        </ion-col>
+        <ion-col>
+          <ion-input label="Autor" labelPlacement="floating" placeholder="Autor"
+            [(ngModel)]="docDto.author"></ion-input>
+        </ion-col>
+        <ion-col>
+          <ion-label position="stacked">Cargar Archivo</ion-label>
+          <ion-input type="file" (change)="handleUpload($event)"></ion-input>
+        </ion-col>
+      </ion-row>
     </ion-item>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar en la tabla" >
+    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar en la tabla" />
     <table mat-table [dataSource]="dataSource" matSort class="mat-table">
-
       <!-- Name Column -->
       <ng-container matColumnDef="name">
-        <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header> Nombre </th>
-        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
+          Nombre
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.name}}</td>
       </ng-container>
 
       <!-- Author Column -->
       <ng-container matColumnDef="author">
-        <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header> Autor </th>
-        <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+        <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
+          Autor
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.weight}}</td>
       </ng-container>
 
       <!-- Action Column -->
       <ng-container matColumnDef="action">
-        <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header> Acción </th>
+        <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
+          Acción
+        </th>
         <td mat-cell *matCellDef="let element">
-          <a id="{{element.url}}" href="{{element.url}}" media="print" style="display: none;"></a>
+          <a id="{{element.url}}" href="{{element.url}}" media="print" style="display: none"></a>
           <button mat-icon-button type="button" (click)="descargarArchivo(element)">
             <ion-icon name="print">Descargar</ion-icon>
           </button>
