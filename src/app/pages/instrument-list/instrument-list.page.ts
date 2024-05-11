@@ -51,9 +51,9 @@ export class InstrumentListPage implements OnInit {
 
   public docDto: IDocumentDto
   public uploadAvaliable: boolean = false
-  public displayedColumns: string[] = ['name', 'author', 'action']
+  public displayedColumns: string[] = ['title', 'author', 'action']
   // eslint-disable-next-line no-use-before-define
-  public dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA)
+  public dataSource = new MatTableDataSource<IDocumentDto>(ELEMENT_DATA)
 
   @ViewChild(MatPaginator) paginator!: MatPaginator
   @ViewChild(MatSort) sort!: MatSort
@@ -74,14 +74,52 @@ export class InstrumentListPage implements OnInit {
     }
   }
 
-  descargarArchivo (element: any): void {
-    console.log(element)
-    // Obtén el enlace por su identificador
-    const enlace = document.getElementById(element.url)
-    // Simula un clic en el enlace para iniciar la descarga
-    if (enlace) {
-      enlace.click()
-    }
+  async printFile (documentDto: IDocumentDto): Promise<void> {
+    documentDto.url = 'BOMBARDINO\\223901.pdf'
+    const loading = await this.loadingController.create({
+      message: 'Descargando archivo, por favor espere...'
+    })
+
+    await loading.present()
+
+    // eslint-disable-next-line no-unused-vars
+    const p = new Promise(
+      resolve => {
+        const r = this.fileService.downloadFile(documentDto)
+
+        r.subscribe(resp => {
+          const dOut = resp as Blob
+          if (dOut == null) {
+            loading.dismiss()
+            this.util.showAlertOk('Error', 'Error al descargar el documento')
+          } else {
+            loading.dismiss()
+            // Crear una URL del blob
+            const pdfUrl = URL.createObjectURL(dOut)
+
+            // Crear un elemento <iframe> para mostrar el PDF
+            const iframe = document.createElement('iframe')
+            iframe.src = pdfUrl
+            iframe.style.display = 'none' // Ocultar el iframe para que no sea visible
+
+            // Agregar el iframe al cuerpo del documento
+            document.body.appendChild(iframe)
+
+            // Esperar a que se cargue el PDF antes de imprimirlo
+            iframe.onload = function () {
+              iframe?.contentWindow?.print() // Imprimir el PDF
+            }
+            this.util.showAlertOk('Correcto', 'Archivo impreso correctamente')
+          }
+
+          resolve(true)
+        },
+        () => {
+          loading.dismiss()
+          resolve(false)
+        })
+      }
+    )
   }
 
   async handleUpload (event: any) {
@@ -105,10 +143,10 @@ export class InstrumentListPage implements OnInit {
           const dOut = resp
           if (dOut == null) {
             loading.dismiss()
-            this.util.showAlertOk('Error', 'Error al crear el comentario')
+            this.util.showAlertOk('Error', 'Error al subir el archivo')
           } else {
             loading.dismiss()
-            this.util.showAlertOk('Creado', 'Comentario creado satisfactoriamente')
+            this.util.showAlertOk('Creado', 'Archivo subido satisfactoriamente')
           }
 
           resolve(true)
@@ -122,14 +160,8 @@ export class InstrumentListPage implements OnInit {
   }
 }
 
-export interface PeriodicElement {
-  name: string;
-  weight: string;
-  url: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { name: 'Jauchzet Gott in allen Landen, BWV 51', weight: 'Bach Johann Sebastian', url: '../../assets/549236.pdf' },
-  { name: 'Trumpet Concerto in Eb for Solo Trumpet & Orchestra', weight: 'Hummel Johann Nepomuk', url: '../../assets/223901.pdf' }
+const ELEMENT_DATA: IDocumentDto[] = [
+  { title: 'Jauchzet Gott in allen Landen, BWV 51', author: 'Bach Johann Sebastian', url: '../../assets/549236.pdf', id: 0 },
+  { title: 'Trumpet Concerto in Eb for Solo Trumpet & Orchestra', author: 'Hummel Johann Nepomuk', url: '../../assets/223901.pdf', id: 0 }
   // ... otros elementos
 ]

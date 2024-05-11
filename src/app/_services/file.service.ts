@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 import { AuthenticationService } from './authentication.service'
 import { environment } from 'src/environments/environment'
+import { IDocumentDto } from '../models/iDocumentDto'
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,15 @@ export class FileService {
     const headers = new HttpHeaders().set('Authorization', bearer)
 
     const r = this.http.post(this.baseUrl + 'file/upload', formData, { headers })
-    console.log(this.baseUrl + 'file/upload', formData)
+
+    return r
+  }
+
+  downloadFile (document: IDocumentDto) {
+    const bearer = 'Bearer ' + this.authService.getToken()
+    const headers = new HttpHeaders().set('Authorization', bearer)
+
+    const r = this.http.post(this.baseUrl + 'file/download', document, { headers, responseType: 'blob' })
 
     return r
   }
