@@ -39,7 +39,7 @@ export class HomePage implements OnInit {
 
   public async onClick (instrument: string): Promise<void> {
     await this.storage.create()// Asegúrate de que la base de datos esté creada
-    this.storage.set('INSTRUMENT', instrument)
+    await this.storage.set('INSTRUMENT', instrument)
     this.router.navigateByUrl('instrument-list')
   }
 }

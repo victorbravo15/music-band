@@ -34,35 +34,30 @@ import { IDocumentDto } from 'src/app/models/iDocumentDto'
 
 export class InstrumentListPage implements OnInit {
   constructor (private router: Router, private storage: Storage, private fileService: FileService, private loadingController: LoadingController, private util: UtilService, private authService: AuthenticationService) {
+  }
+
+  public docDto!: IDocumentDto
+  public uploadAvaliable: boolean = false
+  public displayedColumns: string[] = ['title', 'author', 'action']
+  public dataSource!: MatTableDataSource<IDocumentDto>
+  private file: any
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator
+  @ViewChild(MatSort) sort!: MatSort
+  public instrument!: string
+
+  async ngOnInit () {
     this.instrument = ''
+    this.instrument = await this.storage.get('INSTRUMENT')
     this.docDto = {
       author: '',
       id: 0,
       title: '',
-      url: ''
+      url: '',
+      instrument: this.instrument
     }
-    this.storage.get('INSTRUMENT').then((valor) => {
-      this.instrument = valor as string
-    }).catch((error) => {
-      console.error('Ocurrió un error:', error)
-      this.router.navigateByUrl('home')
-    })
-  }
-
-  public docDto: IDocumentDto
-  public uploadAvaliable: boolean = false
-  public displayedColumns: string[] = ['title', 'author', 'action']
-  // eslint-disable-next-line no-use-before-define
-  public dataSource = new MatTableDataSource<IDocumentDto>(ELEMENT_DATA)
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator
-  @ViewChild(MatSort) sort!: MatSort
-  public instrument: string
-
-  async ngOnInit () {
-    this.dataSource.paginator = this.paginator
-    this.dataSource.sort = this.sort
     this.uploadAvaliable = await this.authService.isRole('DIRECTOR')
+    await this.getDocumentList()
   }
 
   applyFilter (event: Event) {
@@ -75,7 +70,6 @@ export class InstrumentListPage implements OnInit {
   }
 
   async printFile (documentDto: IDocumentDto): Promise<void> {
-    documentDto.url = 'BOMBARDINO\\223901.pdf'
     const loading = await this.loadingController.create({
       message: 'Descargando archivo, por favor espere...'
     })
@@ -122,10 +116,13 @@ export class InstrumentListPage implements OnInit {
     )
   }
 
-  async handleUpload (event: any) {
-    const file = event.target.files[0]
+  handleUpload (event: any) {
+    this.file = event.target.files[0]
+  }
+
+  async clickUpload () {
     const formData = new FormData()
-    formData.append('file', file)
+    formData.append('file', this.file)
     formData.append('instrument', this.instrument)
     formData.append('docDto', JSON.stringify(this.docDto))
 
@@ -147,6 +144,41 @@ export class InstrumentListPage implements OnInit {
           } else {
             loading.dismiss()
             this.util.showAlertOk('Creado', 'Archivo subido satisfactoriamente')
+            this.getDocumentList()
+          }
+
+          resolve(true)
+        },
+        () => {
+          loading.dismiss()
+          resolve(false)
+        })
+      }
+    )
+  }
+
+  async getDocumentList () {
+    const loading = await this.loadingController.create({
+      message: 'Cargando archivos, por favor espere...'
+    })
+    await loading.present()
+
+    // eslint-disable-next-line no-unused-vars
+    const p = new Promise(
+      resolve => {
+        const r = this.fileService.getDocumentList(this.instrument)
+
+        r.subscribe(resp => {
+          const dOut = resp as IDocumentDto[]
+          if (dOut == null) {
+            loading.dismiss()
+            this.util.showAlertOk('Error', 'Error al cargar el listado')
+          } else {
+            this.dataSource = new MatTableDataSource<IDocumentDto>(dOut)
+            this.dataSource.paginator = this.paginator
+            this.dataSource.sort = this.sort
+
+            loading.dismiss()
           }
 
           resolve(true)
@@ -159,9 +191,3 @@ export class InstrumentListPage implements OnInit {
     )
   }
 }
-
-const ELEMENT_DATA: IDocumentDto[] = [
-  { title: 'Jauchzet Gott in allen Landen, BWV 51', author: 'Bach Johann Sebastian', url: '../../assets/549236.pdf', id: 0 },
-  { title: 'Trumpet Concerto in Eb for Solo Trumpet & Orchestra', author: 'Hummel Johann Nepomuk', url: '../../assets/223901.pdf', id: 0 }
-  // ... otros elementos
-]
