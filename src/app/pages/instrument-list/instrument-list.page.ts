@@ -38,7 +38,8 @@ export class InstrumentListPage implements OnInit {
 
   public docDto!: IDocumentDto
   public uploadAvaliable: boolean = false
-  public displayedColumns: string[] = ['title', 'author', 'action']
+  public displayedColumns: string[] = ['title', 'author', 'type', 'print', 'download']
+  public typeList: string[] = ['Procesiones', 'Pasacalles', 'Pasodobles', 'Concierto clásico', 'Concierto moderno', 'Disney', 'Nuevas para montar', 'Misas', 'Charanga y cachondeo']
   public dataSource!: MatTableDataSource<IDocumentDto>
   private file: any
 
@@ -54,9 +55,13 @@ export class InstrumentListPage implements OnInit {
       id: 0,
       title: '',
       url: '',
-      instrument: this.instrument
+      instrument: this.instrument,
+      type: this.typeList[0]
     }
     this.uploadAvaliable = await this.authService.isRole('DIRECTOR')
+    if (this.uploadAvaliable) {
+      this.displayedColumns.push('delete')
+    }
     await this.getDocumentList()
   }
 
@@ -83,7 +88,7 @@ export class InstrumentListPage implements OnInit {
 
         r.subscribe(resp => {
           const dOut = resp as Blob
-          if (dOut == null) {
+          if (!dOut) {
             loading.dismiss()
             this.util.showAlertOk('Error', 'Error al descargar el documento')
           } else {
@@ -104,6 +109,59 @@ export class InstrumentListPage implements OnInit {
               iframe?.contentWindow?.print() // Imprimir el PDF
             }
             this.util.showAlertOk('Correcto', 'Archivo impreso correctamente')
+          }
+
+          resolve(true)
+        },
+        () => {
+          loading.dismiss()
+          resolve(false)
+        })
+      }
+    )
+  }
+
+  async downloadFile (documentDto: IDocumentDto): Promise<void> {
+    const loading = await this.loadingController.create({
+      message: 'Descargando archivo, por favor espere...'
+    })
+
+    await loading.present()
+
+    // eslint-disable-next-line no-unused-vars
+    const p = new Promise(
+      resolve => {
+        const r = this.fileService.downloadFile(documentDto)
+
+        r.subscribe(resp => {
+          const dOut = resp as Blob
+          if (dOut == null) {
+            loading.dismiss()
+            this.util.showAlertOk('Error', 'Error al descargar el documento')
+          } else {
+            // Crear una URL del blob
+            const url = URL.createObjectURL(dOut)
+
+            // Crear un enlace <a> para descargar el archivo
+            const link = document.createElement('a')
+            link.href = url
+            link.download = 'archivo.pdf' // Nombre del archivo que se descargará
+            link.style.display = 'none' // Ocultar el enlace
+
+            // Agregar el enlace al cuerpo del documento
+            document.body.appendChild(link)
+
+            // Simular el clic en el enlace para iniciar la descarga
+            link.click()
+
+            // Eliminar el enlace después de la descarga
+            document.body.removeChild(link)
+
+            // Liberar la URL del blob
+            URL.revokeObjectURL(url)
+
+            loading.dismiss()
+            this.util.showAlertOk('Correcto', 'Archivo descargado correctamente')
           }
 
           resolve(true)
@@ -144,6 +202,38 @@ export class InstrumentListPage implements OnInit {
           } else {
             loading.dismiss()
             this.util.showAlertOk('Creado', 'Archivo subido satisfactoriamente')
+            this.getDocumentList()
+          }
+
+          resolve(true)
+        },
+        () => {
+          loading.dismiss()
+          resolve(false)
+        })
+      }
+    )
+  }
+
+  async clickDelete (document: IDocumentDto) {
+    const loading = await this.loadingController.create({
+      message: 'Borrando archivo, por favor espere...'
+    })
+    await loading.present()
+
+    // eslint-disable-next-line no-unused-vars
+    const p = new Promise(
+      resolve => {
+        const r = this.fileService.deleteFile(document)
+
+        r.subscribe(resp => {
+          const dOut = resp
+          if (dOut == null) {
+            loading.dismiss()
+            this.util.showAlertOk('Error', 'Error al borrar el archivo')
+          } else {
+            loading.dismiss()
+            this.util.showAlertOk('Correcto', 'Archivo borrado satisfactoriamente')
             this.getDocumentList()
           }
 

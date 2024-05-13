@@ -35,6 +35,15 @@ export class FileService {
     return r
   }
 
+  deleteFile (document: IDocumentDto) {
+    const bearer = 'Bearer ' + this.authService.getToken()
+    const headers = new HttpHeaders().set('Authorization', bearer)
+
+    const r = this.http.post(this.baseUrl + 'file/delete', document, { headers })
+
+    return r
+  }
+
   getDocumentList (instrument: string) {
     const bearer = 'Bearer ' + this.authService.getToken()
     const headers = new HttpHeaders().set('Authorization', bearer)

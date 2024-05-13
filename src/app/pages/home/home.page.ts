@@ -19,22 +19,22 @@ export class HomePage implements OnInit {
   }
 
   public instrumentos: {instrument: string, avaliable: boolean}[] = [
-    { instrument: 'BOMBARDINO', avaliable: false },
-    { instrument: 'BOMBO PLATILLOS', avaliable: false },
-    { instrument: 'CAJA', avaliable: false },
-    { instrument: 'CLARINETE', avaliable: false },
     { instrument: 'DIRECTOR', avaliable: false },
     { instrument: 'FLAUTA', avaliable: false },
-    { instrument: 'FLISCORNO', avaliable: false },
-    { instrument: 'PERCUSION', avaliable: false },
-    { instrument: 'SAXO ALTO', avaliable: false },
-    { instrument: 'SAXO BARITONO', avaliable: false },
+    { instrument: 'CLARINETE', avaliable: false },
     { instrument: 'SAXO SOPRANO', avaliable: false },
+    { instrument: 'SAXO ALTO', avaliable: false },
+    { instrument: 'TROMPETA', avaliable: false },
+    { instrument: 'FLISCORNO', avaliable: false },
+    { instrument: 'TROMPA', avaliable: false },
     { instrument: 'SAXO TENOR', avaliable: false },
     { instrument: 'TROMBON', avaliable: false },
-    { instrument: 'TROMPA', avaliable: false },
-    { instrument: 'TROMPETA', avaliable: false },
-    { instrument: 'TUBA', avaliable: false }
+    { instrument: 'BOMBARDINO', avaliable: false },
+    { instrument: 'SAXO BARITONO', avaliable: false },
+    { instrument: 'TUBA', avaliable: false },
+    { instrument: 'CAJA', avaliable: false },
+    { instrument: 'BOMBO PLATILLOS', avaliable: false },
+    { instrument: 'PERCUSION', avaliable: false }
   ]
 
   public async onClick (instrument: string): Promise<void> {

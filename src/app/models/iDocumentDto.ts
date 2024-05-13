@@ -4,4 +4,5 @@ export interface IDocumentDto {
     author: string;
     url: string;
     instrument: string;
+    type: string;
 }

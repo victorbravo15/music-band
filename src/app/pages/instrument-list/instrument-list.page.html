@@ -6,12 +6,19 @@
     <ion-item *ngIf="uploadAvaliable">
       <ion-row class="centreItems">
         <ion-col>
-          <ion-input label="Titulo" labelPlacement="floating" placeholder="Titulo"
+          <ion-input label="Titulo" labelPlacement="stacked" placeholder="Titulo"
             [(ngModel)]="docDto.title"></ion-input>
         </ion-col>
         <ion-col>
-          <ion-input label="Autor" labelPlacement="floating" placeholder="Autor"
+          <ion-input label="Autor" labelPlacement="stacked" placeholder="Autor"
             [(ngModel)]="docDto.author"></ion-input>
+        </ion-col>
+        <ion-col>
+          <ion-select label="Tipo" label-placement="floating" [(ngModel)]="docDto.type">
+            <ion-select-option *ngFor="let type of typeList" [value]="type">
+              {{ type }}
+            </ion-select-option>
+          </ion-select>
         </ion-col>
         <ion-col>
           <ion-label position="stacked">Cargar Archivo</ion-label>
@@ -22,7 +29,7 @@
         </ion-col>
       </ion-row>
     </ion-item>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar en la tabla" />
+    <input *ngIf="dataSource" matInput (keyup)="applyFilter($event)" placeholder="Buscar en la tabla" />
     <table mat-table [dataSource]="dataSource" matSort class="mat-table" *ngIf="dataSource">
       <!-- Name Column -->
       <ng-container matColumnDef="title">
@@ -40,10 +47,30 @@
         <td mat-cell *matCellDef="let element">{{element.author}}</td>
       </ng-container>
 
-      <!-- Action Column -->
-      <ng-container matColumnDef="action">
+      <!-- Type Column -->
+      <ng-container matColumnDef="type">
         <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
-          Acción
+          Tipo
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.type}}</td>
+      </ng-container>
+
+      <!-- Print Column -->
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
+          Borrar
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button type="button" (click)="clickDelete(element)">
+            <ion-icon name="trash-outline">Borrar</ion-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Print Column -->
+      <ng-container matColumnDef="print">
+        <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
+          Imprimir
         </th>
         <td mat-cell *matCellDef="let element">
           <button mat-icon-button type="button" (click)="printFile(element)">
@@ -52,9 +79,21 @@
         </td>
       </ng-container>
 
+      <!-- Download Column -->
+      <ng-container matColumnDef="download">
+        <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
+          Descargar
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button type="button" (click)="downloadFile(element)">
+            <ion-icon name="download">Descargar</ion-icon>
+          </button>
+        </td>
+      </ng-container>
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    <mat-paginator *ngIf="dataSource" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
 </ion-content>
