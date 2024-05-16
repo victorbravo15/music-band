@@ -52,7 +52,14 @@
         <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
           Tipo
         </th>
-        <td mat-cell *matCellDef="let element">{{element.type}}</td>
+        <td mat-cell *matCellDef="let element">
+          <ion-select (ionChange)="editDocumentType(element)" *ngIf="uploadAvaliable" label="Tipo" label-placement="floating" [(ngModel)]="element.type">
+            <ion-select-option *ngFor="let type of typeList" [value]="type">
+              {{ type }}
+            </ion-select-option>
+          </ion-select>
+          <span *ngIf="!uploadAvaliable">{{element.type}}</span>
+        </td>
       </ng-container>
 
       <!-- Print Column -->

@@ -48,7 +48,16 @@ export class FileService {
     const bearer = 'Bearer ' + this.authService.getToken()
     const headers = new HttpHeaders().set('Authorization', bearer)
 
-    const r = this.http.post(this.baseUrl + 'file/documentlist' + '?instrument=' + instrument, document, { headers })
+    const r = this.http.get(this.baseUrl + 'file/documentlist' + '?instrument=' + instrument, { headers })
+
+    return r
+  }
+
+  editDocumentListType (document: IDocumentDto) {
+    const bearer = 'Bearer ' + this.authService.getToken()
+    const headers = new HttpHeaders().set('Authorization', bearer)
+
+    const r = this.http.post(this.baseUrl + 'file/editdocumenttype', document, { headers })
 
     return r
   }

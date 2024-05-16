@@ -280,4 +280,35 @@ export class InstrumentListPage implements OnInit {
       }
     )
   }
+
+  async editDocumentType (element: IDocumentDto) {
+    const loading = await this.loadingController.create({
+      message: 'Editando documento, por favor espere...'
+    })
+    await loading.present()
+
+    // eslint-disable-next-line no-unused-vars
+    const p = new Promise(
+      resolve => {
+        const r = this.fileService.editDocumentListType(element)
+
+        r.subscribe(resp => {
+          const dOut = resp as boolean
+          if (dOut) {
+            loading.dismiss()
+            this.util.showAlertOk('Correcto', 'Tipo del documento editado correctamente')
+          } else {
+            loading.dismiss()
+            this.util.showAlertOk('Error', 'Error al editar el documento')
+          }
+
+          resolve(true)
+        },
+        () => {
+          loading.dismiss()
+          resolve(false)
+        })
+      }
+    )
+  }
 }
