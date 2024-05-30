@@ -1,106 +1,96 @@
-<app-header [showBackButton]="true"></app-header>
-
-<ion-content [fullscreen]="true">
-  <ion-title>{{instrument}}</ion-title>
-  <div class="table-container mat-elevation-z8">
-    <ion-item *ngIf="uploadAvaliable">
-      <ion-row class="centreItems">
-        <ion-col>
-          <ion-input label="Titulo" labelPlacement="stacked" placeholder="Titulo"
-            [(ngModel)]="docDto.title"></ion-input>
-        </ion-col>
-        <ion-col>
-          <ion-input label="Autor" labelPlacement="stacked" placeholder="Autor"
-            [(ngModel)]="docDto.author"></ion-input>
-        </ion-col>
-        <ion-col>
-          <ion-select label="Tipo" label-placement="floating" [(ngModel)]="docDto.type">
-            <ion-select-option *ngFor="let type of typeList" [value]="type">
-              {{ type }}
-            </ion-select-option>
-          </ion-select>
-        </ion-col>
-        <ion-col>
-          <ion-label position="stacked">Cargar Archivo</ion-label>
-          <ion-input type="file" (change)="handleUpload($event)"></ion-input>
-        </ion-col>
-        <ion-col size="auto">
-          <ion-button type="submit" (click)="clickUpload()">Subir</ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-item>
-    <input *ngIf="dataSource" matInput (keyup)="applyFilter($event)" placeholder="Buscar en la tabla" />
-    <table mat-table [dataSource]="dataSource" matSort class="mat-table" *ngIf="dataSource">
-      <!-- Name Column -->
-      <ng-container matColumnDef="title">
-        <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
-          Nombre
-        </th>
-        <td mat-cell *matCellDef="let element">{{element.title}}</td>
-      </ng-container>
-
-      <!-- Author Column -->
-      <ng-container matColumnDef="author">
-        <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
-          Autor
-        </th>
-        <td mat-cell *matCellDef="let element">{{element.author}}</td>
-      </ng-container>
-
-      <!-- Type Column -->
-      <ng-container matColumnDef="type">
-        <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
-          Tipo
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <ion-select (ionChange)="editDocumentType(element)" *ngIf="uploadAvaliable" label="Tipo" label-placement="floating" [(ngModel)]="element.type">
-            <ion-select-option *ngFor="let type of typeList" [value]="type">
-              {{ type }}
-            </ion-select-option>
-          </ion-select>
-          <span *ngIf="!uploadAvaliable">{{element.type}}</span>
-        </td>
-      </ng-container>
-
-      <!-- Print Column -->
-      <ng-container matColumnDef="delete">
-        <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
-          Borrar
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-icon-button type="button" (click)="clickDelete(element)">
-            <ion-icon name="trash-outline">Borrar</ion-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <!-- Print Column -->
-      <ng-container matColumnDef="print">
-        <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
-          Imprimir
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-icon-button type="button" (click)="printFile(element)">
-            <ion-icon name="print">Imprimir</ion-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <!-- Download Column -->
-      <ng-container matColumnDef="download">
-        <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
-          Descargar
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-icon-button type="button" (click)="downloadFile(element)">
-            <ion-icon name="download">Descargar</ion-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-    <mat-paginator *ngIf="dataSource" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-  </div>
-</ion-content>
+<ion-header>
+  <app-header [showBackButton]="true"></app-header>
+    <ion-toolbar>
+      <ion-title>{{instrument}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content [fullscreen]="true">
+    <!-- <ion-title>{{instrument}}</ion-title> -->
+    <div class="table-container mat-elevation-z8">
+      <ion-item>
+        <div *ngFor="let docDto of docDtos; let i = index">
+          <ion-row class="centreItems">
+            <ion-col>
+              <ion-input label="Titulo" labelPlacement="stacked" placeholder="Titulo"
+                [(ngModel)]="docDto.title"></ion-input>
+            </ion-col>
+            <ion-col>
+              <ion-input label="Autor" labelPlacement="stacked" placeholder="Autor"
+                [(ngModel)]="docDto.author"></ion-input>
+            </ion-col>
+            <ion-col>
+              <ion-select label="Tipo" label-placement="floating" [(ngModel)]="docDto.type">
+                <ion-select-option *ngFor="let type of typeList" [value]="type">
+                  {{ type }}
+                </ion-select-option>
+              </ion-select>
+            </ion-col>
+            <ion-col>
+              <ion-label position="stacked">Cargar Archivo</ion-label>
+              <ion-input type="file" [disabled]="!docDto.title || !docDto.author" (change)="handleUpload($event, i)"></ion-input>
+            </ion-col>
+          </ion-row>
+        </div>
+        <div class="twoButtons">
+          <ion-button (click)="addNewUpload()">Añadir archivo</ion-button>
+          <ion-button (click)="deleteNewUpload()" *ngIf="docDtos.length > 1">Borrar ultimo archivo</ion-button>
+          <ion-button type="submit" (click)="clickUpload()" [disabled]="docDtos.length <= 0">Subir Todo</ion-button>
+        </div>
+      </ion-item>
+      <input *ngIf="dataSource" matInput (keyup)="applyFilter($event)" placeholder="Buscar en la tabla" />
+      <table mat-table [dataSource]="dataSource" matSort class="mat-table" *ngIf="dataSource">
+        <!-- Name Column -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
+            Nombre
+          </th>
+          <td mat-cell *matCellDef="let element">{{element.title}}</td>
+        </ng-container>
+  
+        <!-- Author Column -->
+        <ng-container matColumnDef="author">
+          <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
+            Autor
+          </th>
+          <td mat-cell *matCellDef="let element">{{element.author}}</td>
+        </ng-container>
+  
+        <!-- Type Column -->
+        <ng-container matColumnDef="type">
+          <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
+            Tipo
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <ion-select (ionChange)="editDocumentType(element)" *ngIf="uploadAvaliable" label="Tipo" label-placement="floating" [(ngModel)]="element.type">
+              <ion-select-option *ngFor="let type of typeList" [value]="type">
+                {{ type }}
+              </ion-select-option>
+            </ion-select>
+            <span *ngIf="!uploadAvaliable">{{element.type}}</span>
+          </td>
+        </ng-container>
+  
+        <!-- Print Column -->
+        <ng-container matColumnDef="print">
+          <th mat-header-cell class="header-table-color" *matHeaderCellDef mat-sort-header>
+            Acciones
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button type="button" (click)="printFile(element)">
+              <ion-icon name="print">Imprimir</ion-icon>
+            </button>
+            <button mat-icon-button type="button" (click)="downloadFile(element)">
+              <ion-icon name="download">Descargar</ion-icon>
+            </button>
+            <button mat-icon-button type="button" *ngIf="uploadAvaliable" (click)="clickDelete(element)">
+              <ion-icon name="trash-outline">Borrar</ion-icon>
+            </button>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+  </ion-content>

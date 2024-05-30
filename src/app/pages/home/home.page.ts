@@ -20,6 +20,7 @@ export class HomePage implements OnInit {
 
   public instrumentos: {instrument: string, avaliable: boolean}[] = [
     { instrument: 'DIRECTOR', avaliable: false },
+    { instrument: 'NUEVAS PARA MONTAR', avaliable: false },
     { instrument: 'FLAUTA', avaliable: false },
     { instrument: 'CLARINETE', avaliable: false },
     { instrument: 'SAXO SOPRANO', avaliable: false },

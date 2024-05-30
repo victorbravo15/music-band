@@ -38,9 +38,10 @@ export class InstrumentListPage implements OnInit {
 
   public docDto!: IDocumentDto
   public uploadAvaliable: boolean = false
-  public displayedColumns: string[] = ['title', 'author', 'type', 'print', 'download']
+  public displayedColumns: string[] = ['title', 'author', 'type', 'print']
   public typeList: string[] = ['Procesiones', 'Pasacalles', 'Pasodobles', 'Concierto clásico', 'Concierto moderno', 'Disney', 'Nuevas para montar', 'Misas', 'Charanga y cachondeo']
   public dataSource!: MatTableDataSource<IDocumentDto>
+  public docDtos: { title: string, author: string, type: string, file: File }[] = []
   private file: any
 
   @ViewChild(MatPaginator) paginator!: MatPaginator
@@ -59,10 +60,8 @@ export class InstrumentListPage implements OnInit {
       type: this.typeList[0]
     }
     this.uploadAvaliable = await this.authService.isRole('DIRECTOR')
-    if (this.uploadAvaliable) {
-      this.displayedColumns.push('delete')
-    }
     await this.getDocumentList()
+    this.addNewUpload()
   }
 
   applyFilter (event: Event) {
@@ -174,45 +173,59 @@ export class InstrumentListPage implements OnInit {
     )
   }
 
-  handleUpload (event: any) {
-    this.file = event.target.files[0]
+  handleUpload (event: any, index: number) {
+    const file: File = event.target.files[0]
+    this.docDtos[index].file = file
+  }
+
+  addNewUpload () {
+    this.docDtos.push({
+      title: '',
+      author: '',
+      type: '',
+      file: new File([], '')
+    })
+  }
+
+  deleteNewUpload () {
+    this.docDtos.pop()
   }
 
   async clickUpload () {
-    const formData = new FormData()
-    formData.append('file', this.file)
-    formData.append('instrument', this.instrument)
-    formData.append('docDto', JSON.stringify(this.docDto))
-
-    const loading = await this.loadingController.create({
-      message: 'Subiendo archivo, por favor espere...'
-    })
-    await loading.present()
-
-    // eslint-disable-next-line no-unused-vars
-    const p = new Promise(
-      resolve => {
-        const r = this.fileService.uploadFile(formData)
-
-        r.subscribe(resp => {
-          const dOut = resp
-          if (dOut == null) {
-            loading.dismiss()
-            this.util.showAlertOk('Error', 'Error al subir el archivo')
-          } else {
-            loading.dismiss()
-            this.util.showAlertOk('Creado', 'Archivo subido satisfactoriamente')
-            this.getDocumentList()
-          }
-
-          resolve(true)
-        },
-        () => {
-          loading.dismiss()
-          resolve(false)
-        })
+    for (const doc of this.docDtos) {
+      if (doc.file == null || doc.file.size === 0) {
+        this.util.showAlertOk('Error', 'Debe seleccionar un archivo para subir')
+        return
       }
-    )
+      const formData = new FormData()
+      formData.append('file', doc.file)
+      formData.append('instrument', this.instrument)
+      this.docDto.title = doc.title
+      this.docDto.author = doc.author
+      this.docDto.type = doc.type
+      this.docDto.instrument = this.instrument
+      formData.append('docDto', JSON.stringify(this.docDto))
+
+      const loading = await this.loadingController.create({
+        message: 'Subiendo archivo, por favor espere...'
+      })
+      await loading.present()
+
+      try {
+        const resp = await this.fileService.uploadFile(formData).toPromise()
+
+        if (resp == null) {
+          this.util.showAlertOk('Error', 'Error al subir el archivo')
+        } else {
+          this.util.showAlertOk('Creado', 'Archivo subido satisfactoriamente')
+        }
+      } catch (error) {
+        this.util.showAlertOk('Error', 'Error al subir el archivo')
+      } finally {
+        loading.dismiss()
+      }
+    }
+    this.getDocumentList()
   }
 
   async clickDelete (document: IDocumentDto) {
