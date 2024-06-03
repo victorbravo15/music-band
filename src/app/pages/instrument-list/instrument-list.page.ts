@@ -191,12 +191,19 @@ export class InstrumentListPage implements OnInit {
     this.docDtos.pop()
   }
 
+  canUpload (): boolean {
+    if (!this.docDtos.every(doc => doc.file != null && doc.file.size > 0)) {
+      return false
+    }
+    return true
+  }
+
   async clickUpload () {
+    if (!this.canUpload()) {
+      this.util.showAlertOk('Error', 'Debe seleccionar un archivo para subir')
+      return
+    }
     for (const doc of this.docDtos) {
-      if (doc.file == null || doc.file.size === 0) {
-        this.util.showAlertOk('Error', 'Debe seleccionar un archivo para subir')
-        return
-      }
       const formData = new FormData()
       formData.append('file', doc.file)
       formData.append('instrument', this.instrument)
@@ -215,16 +222,18 @@ export class InstrumentListPage implements OnInit {
         const resp = await this.fileService.uploadFile(formData).toPromise()
 
         if (resp == null) {
-          this.util.showAlertOk('Error', 'Error al subir el archivo')
+          this.util.showAlertOk('Error', 'Error al subir el archivo ' + doc.file.name)
         } else {
-          this.util.showAlertOk('Creado', 'Archivo subido satisfactoriamente')
+          this.util.showAlertOk('Creado', 'Archivo subido satisfactoriamente ' + doc.file.name)
         }
       } catch (error) {
-        this.util.showAlertOk('Error', 'Error al subir el archivo')
+        this.util.showAlertOk('Error', 'Error al subir el archivo ' + doc.file.name)
       } finally {
         loading.dismiss()
       }
     }
+    this.docDtos = []
+    this.addNewUpload()
     this.getDocumentList()
   }
 

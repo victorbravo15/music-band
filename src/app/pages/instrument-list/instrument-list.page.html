@@ -34,7 +34,7 @@
         <div class="twoButtons">
           <ion-button (click)="addNewUpload()">Añadir archivo</ion-button>
           <ion-button (click)="deleteNewUpload()" *ngIf="docDtos.length > 1">Borrar ultimo archivo</ion-button>
-          <ion-button type="submit" (click)="clickUpload()" [disabled]="docDtos.length <= 0">Subir Todo</ion-button>
+          <ion-button type="submit" (click)="clickUpload()" [disabled]="!(canUpload())">Subir Todo</ion-button>
         </div>
       </ion-item>
       <input *ngIf="dataSource" matInput (keyup)="applyFilter($event)" placeholder="Buscar en la tabla" />
