@@ -16,7 +16,7 @@
         "@angular-eslint/component-class-suffix": [
           "error",
           {
-            "suffixes": ["Page", "Component"]
+            "suffixes": ["Component", "Page"]
           }
         ],
         "@angular-eslint/component-selector": [
@@ -34,7 +34,8 @@
             "prefix": "app",
             "style": "camelCase"
           }
-        ]
+        ],
+        "semi": ["error", "always"]
       }
     },
     {

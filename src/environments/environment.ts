@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   // apiUrl: 'https://api-victor.azurewebsites.net/'
   apiUrl: 'https://localhost:44371/'
-}
+};
 
 /*
  * For easier debugging in development mode, you can import the following file
