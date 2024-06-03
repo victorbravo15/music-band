@@ -4,8 +4,7 @@
       <ion-title>{{instrument}}</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-content [fullscreen]="true">
-    <!-- <ion-title>{{instrument}}</ion-title> -->
+  <ion-content [fullscreen]="true" *ngIf="!util.isSmallScreen">
     <div class="table-container mat-elevation-z8">
       <ion-item>
         <div *ngFor="let docDto of docDtos; let i = index">
@@ -93,4 +92,56 @@
       </table>
       <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </div>
+  </ion-content>
+
+  <ion-content [fullscreen]="true" *ngIf="util.isSmallScreen">
+    <ion-item>
+      <div *ngFor="let docDto of docDtos; let i = index">
+        <ion-row class="centreItems">
+          <ion-col>
+            <ion-input label="Titulo" labelPlacement="stacked" placeholder="Titulo"
+              [(ngModel)]="docDto.title"></ion-input>
+          </ion-col>
+          <ion-col>
+            <ion-input label="Autor" labelPlacement="stacked" placeholder="Autor"
+              [(ngModel)]="docDto.author"></ion-input>
+          </ion-col>
+          <ion-col>
+            <ion-select label="Tipo" label-placement="floating" [(ngModel)]="docDto.type">
+              <ion-select-option *ngFor="let type of typeList" [value]="type">
+                {{ type }}
+              </ion-select-option>
+            </ion-select>
+          </ion-col>
+          <ion-col>
+            <ion-label position="stacked">Cargar Archivo</ion-label>
+            <ion-input type="file" [disabled]="!docDto.title || !docDto.author" (change)="handleUpload($event, i)"></ion-input>
+          </ion-col>
+        </ion-row>
+      </div>
+      <div class="twoButtons">
+        <ion-button (click)="addNewUpload()">Añadir archivo</ion-button>
+        <ion-button (click)="deleteNewUpload()" *ngIf="docDtos.length > 1">Borrar ultimo archivo</ion-button>
+        <ion-button type="submit" (click)="clickUpload()" [disabled]="!(canUpload())">Subir Todo</ion-button>
+      </div>
+    </ion-item>
+    <ion-searchbar [(ngModel)]="searchString" (keyup)="applyFilterMobile()" placeholder="Buscar" animated show-clear-button="never" color="primary"></ion-searchbar>
+    <ion-card *ngFor="let element of documentDto">
+      <ion-card-header>
+        <ion-card-title>{{element.title}}</ion-card-title>
+        <ion-card-subtitle>{{element.author}}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <p>Tipo: {{element.type}}</p>
+        <ion-button type="button" (click)="printFile(element)">
+          <ion-icon name="print">Imprimir</ion-icon>
+        </ion-button>
+        <ion-button type="button" (click)="downloadFile(element)">
+          <ion-icon name="download">Descargar</ion-icon>
+        </ion-button>
+        <ion-button type="button" *ngIf="uploadAvaliable" (click)="clickDelete(element)">
+          <ion-icon name="trash-outline">Borrar</ion-icon>
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
   </ion-content>

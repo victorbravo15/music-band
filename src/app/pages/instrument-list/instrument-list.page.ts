@@ -11,7 +11,6 @@ import { IonicModule, LoadingController } from '@ionic/angular'
 import { FormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { Storage } from '@ionic/storage-angular'
-import { Router } from '@angular/router'
 import { FileService } from 'src/app/_services/file.service'
 import { UtilService } from 'src/app/_services/util.service'
 import { AuthenticationService } from 'src/app/_services/authentication.service'
@@ -33,20 +32,22 @@ import { IDocumentDto } from 'src/app/models/iDocumentDto'
 })
 
 export class InstrumentListPage implements OnInit {
-  constructor (private router: Router, private storage: Storage, private fileService: FileService, private loadingController: LoadingController, private util: UtilService, private authService: AuthenticationService) {
+  constructor (private storage: Storage, private fileService: FileService, private loadingController: LoadingController, public util: UtilService, private authService: AuthenticationService) {
   }
 
+  public searchString: string = ''
+  public documentDto: IDocumentDto[] = []
   public docDto!: IDocumentDto
   public uploadAvaliable: boolean = false
   public displayedColumns: string[] = ['title', 'author', 'type', 'print']
   public typeList: string[] = ['Procesiones', 'Pasacalles', 'Pasodobles', 'Concierto clásico', 'Concierto moderno', 'Disney', 'Nuevas para montar', 'Misas', 'Charanga y cachondeo']
   public dataSource!: MatTableDataSource<IDocumentDto>
   public docDtos: { title: string, author: string, type: string, file: File }[] = []
-  private file: any
 
   @ViewChild(MatPaginator) paginator!: MatPaginator
   @ViewChild(MatSort) sort!: MatSort
   public instrument!: string
+  private originalDocumentDto: IDocumentDto[] = []
 
   async ngOnInit () {
     this.instrument = ''
@@ -71,6 +72,16 @@ export class InstrumentListPage implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage()
     }
+  }
+
+  applyFilterMobile () {
+    const filterValue = this.searchString.trim().toLowerCase() // Remove whitespace and convert to lowercase for better search results
+    const filterData = this.originalDocumentDto.filter(doc =>
+      doc.title.toLowerCase().includes(filterValue) ||
+      doc.author.toLowerCase().includes(filterValue) ||
+      doc.type.toLowerCase().includes(filterValue)
+    )
+    this.documentDto = [...filterData]
   }
 
   async printFile (documentDto: IDocumentDto): Promise<void> {
@@ -282,6 +293,8 @@ export class InstrumentListPage implements OnInit {
 
         r.subscribe(resp => {
           const dOut = resp as IDocumentDto[]
+          this.documentDto = dOut
+          this.originalDocumentDto = [...this.documentDto]
           if (dOut == null) {
             loading.dismiss()
             this.util.showAlertOk('Error', 'Error al cargar el listado')
