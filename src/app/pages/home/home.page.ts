@@ -1,24 +1,24 @@
 /* eslint-disable no-useless-constructor */
-import { Component, OnInit } from '@angular/core'
-import { Router } from '@angular/router'
-import { Storage } from '@ionic/storage-angular'
-import { AuthenticationService } from 'src/app/_services/authentication.service'
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage-angular';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss']
 })
 export class HomePage implements OnInit {
-  constructor (private router: Router, private storage: Storage, public authService: AuthenticationService) {
+  constructor(private router: Router, private storage: Storage, public authService: AuthenticationService) {
   }
 
-  async ngOnInit () {
+  async ngOnInit() {
     this.instrumentos.forEach(async element => {
-      element.avaliable = await this.authService.isRole(element.instrument)
-    })
+      element.avaliable = await this.authService.isRole(element.instrument);
+    });
   }
 
-  public instrumentos: {instrument: string, avaliable: boolean}[] = [
+  public instrumentos: { instrument: string, avaliable: boolean }[] = [
     { instrument: 'DIRECTOR', avaliable: false },
     { instrument: 'NUEVAS PARA MONTAR', avaliable: false },
     { instrument: 'FLAUTA', avaliable: false },
@@ -36,11 +36,15 @@ export class HomePage implements OnInit {
     { instrument: 'CAJA', avaliable: false },
     { instrument: 'BOMBO PLATILLOS', avaliable: false },
     { instrument: 'PERCUSION', avaliable: false }
-  ]
+  ];
 
-  public async onClick (instrument: string): Promise<void> {
-    await this.storage.create()// Asegúrate de que la base de datos esté creada
-    await this.storage.set('INSTRUMENT', instrument)
-    this.router.navigateByUrl('instrument-list')
+  public async onClick(instrument: string): Promise<void> {
+    await this.storage.create();// Asegúrate de que la base de datos esté creada
+    await this.storage.set('INSTRUMENT', instrument);
+    this.router.navigateByUrl('instrument-list');
+  }
+
+  public formatInstrumentName(instrumentName: string): string {
+    return instrumentName.toLowerCase().replace(/\s/g, '_');
   }
 }

@@ -1,9 +1,9 @@
 /* eslint-disable no-useless-constructor */
-import { CommonModule } from '@angular/common'
-import { Component, Input } from '@angular/core'
-import { Router } from '@angular/router'
-import { IonicModule } from '@ionic/angular'
-import { AuthenticationService } from 'src/app/_services/authentication.service'
+import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { IonicModule } from '@ionic/angular';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
 
 @Component({
   selector: 'app-header',
@@ -13,17 +13,17 @@ import { AuthenticationService } from 'src/app/_services/authentication.service'
   imports: [IonicModule, CommonModule]
 })
 export class HeaderComponent {
-  @Input() showBackButton: boolean = false
-  @Input() showExitButton: boolean = false
-  @Input() imageUrl: string = '../../../assets/logo.jpg'
+  @Input() showBackButton: boolean = false;
+  @Input() showExitButton: boolean = false;
+  @Input() imageUrl: string = '../../../assets/logo.jpg';
 
-  constructor (private router: Router, private authService: AuthenticationService) {}
+  constructor(private router: Router, private authService: AuthenticationService) { }
 
-  navigateToRoot () {
-    this.router.navigateByUrl('/')
+  navigateToRoot() {
+    this.router.navigateByUrl('/');
   }
 
-  logout () {
-    return this.authService.logout()
+  logout() {
+    return this.authService.logout();
   }
 }
