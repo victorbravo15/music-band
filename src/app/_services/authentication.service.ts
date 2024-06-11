@@ -68,8 +68,8 @@ export class AuthenticationService {
     }
   }
 
-  public getToken() {
-    this.loadUser();
+  public async getToken() {
+    await this.loadUser();
     return this.token;
   }
 

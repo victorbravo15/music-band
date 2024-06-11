@@ -44,8 +44,8 @@ export class FileService {
     return r;
   }
 
-  getDocumentList(instrument: string) {
-    const bearer = 'Bearer ' + this.authService.getToken();
+  async getDocumentList(instrument: string) {
+    const bearer = 'Bearer ' + await this.authService.getToken();
     const headers = new HttpHeaders().set('Authorization', bearer);
 
     const r = this.http.get(this.baseUrl + 'file/documentlist' + '?instrument=' + instrument, { headers });

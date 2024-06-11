@@ -288,10 +288,11 @@ export class InstrumentListPage implements OnInit {
 
     // eslint-disable-next-line no-unused-vars
     const p = new Promise(
-      resolve => {
+      // eslint-disable-next-line no-async-promise-executor
+      async resolve => {
         const r = this.fileService.getDocumentList(this.instrument);
 
-        r.subscribe(resp => {
+        (await r).subscribe(resp => {
           const dOut = resp as IDocumentDto[];
           this.documentDto = dOut;
           this.originalDocumentDto = [...this.documentDto];
