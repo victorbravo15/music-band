@@ -17,8 +17,8 @@ export class FileService {
     return this.http.get(enlaceCompartido, { responseType: 'blob' as 'json' });
   }
 
-  uploadFile(formData: FormData) {
-    const bearer = 'Bearer ' + this.authService.getToken();
+  async uploadFile(formData: FormData) {
+    const bearer = 'Bearer ' + await this.authService.getToken();
     const headers = new HttpHeaders().set('Authorization', bearer);
 
     const r = this.http.post(this.baseUrl + 'file/upload', formData, { headers });
@@ -26,8 +26,8 @@ export class FileService {
     return r;
   }
 
-  downloadFile(document: IDocumentDto) {
-    const bearer = 'Bearer ' + this.authService.getToken();
+  async downloadFile(document: IDocumentDto) {
+    const bearer = 'Bearer ' + await this.authService.getToken();
     const headers = new HttpHeaders().set('Authorization', bearer);
 
     const r = this.http.post(this.baseUrl + 'file/download', document, { headers, responseType: 'blob' });
@@ -35,8 +35,8 @@ export class FileService {
     return r;
   }
 
-  deleteFile(document: IDocumentDto) {
-    const bearer = 'Bearer ' + this.authService.getToken();
+  async deleteFile(document: IDocumentDto) {
+    const bearer = 'Bearer ' + await this.authService.getToken();
     const headers = new HttpHeaders().set('Authorization', bearer);
 
     const r = this.http.post(this.baseUrl + 'file/delete', document, { headers });
@@ -53,8 +53,8 @@ export class FileService {
     return r;
   }
 
-  editDocumentListType(document: IDocumentDto) {
-    const bearer = 'Bearer ' + this.authService.getToken();
+  async editDocumentListType(document: IDocumentDto) {
+    const bearer = 'Bearer ' + await this.authService.getToken();
     const headers = new HttpHeaders().set('Authorization', bearer);
 
     const r = this.http.post(this.baseUrl + 'file/editdocumenttype', document, { headers });

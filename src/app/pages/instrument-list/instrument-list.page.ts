@@ -93,10 +93,11 @@ export class InstrumentListPage implements OnInit {
 
     // eslint-disable-next-line no-unused-vars
     const p = new Promise(
-      resolve => {
+      // eslint-disable-next-line no-async-promise-executor
+      async resolve => {
         const r = this.fileService.downloadFile(documentDto);
 
-        r.subscribe(resp => {
+        (await r).subscribe(resp => {
           const dOut = resp as Blob;
           if (!dOut) {
             loading.dismiss();
@@ -140,10 +141,11 @@ export class InstrumentListPage implements OnInit {
 
     // eslint-disable-next-line no-unused-vars
     const p = new Promise(
-      resolve => {
+      // eslint-disable-next-line no-async-promise-executor
+      async resolve => {
         const r = this.fileService.downloadFile(documentDto);
 
-        r.subscribe(resp => {
+        (await r).subscribe(resp => {
           const dOut = resp as Blob;
           if (dOut == null) {
             loading.dismiss();
@@ -230,7 +232,7 @@ export class InstrumentListPage implements OnInit {
       await loading.present();
 
       try {
-        const resp = await this.fileService.uploadFile(formData).toPromise();
+        const resp = await (await this.fileService.uploadFile(formData)).toPromise();
 
         if (resp == null) {
           this.util.showAlertOk('Error', 'Error al subir el archivo ' + doc.file.name);
@@ -256,10 +258,11 @@ export class InstrumentListPage implements OnInit {
 
     // eslint-disable-next-line no-unused-vars
     const p = new Promise(
-      resolve => {
+      // eslint-disable-next-line no-async-promise-executor
+      async resolve => {
         const r = this.fileService.deleteFile(document);
 
-        r.subscribe(resp => {
+        (await r).subscribe(resp => {
           const dOut = resp;
           if (dOut == null) {
             loading.dismiss();
@@ -325,10 +328,11 @@ export class InstrumentListPage implements OnInit {
 
     // eslint-disable-next-line no-unused-vars
     const p = new Promise(
-      resolve => {
+      // eslint-disable-next-line no-async-promise-executor
+      async resolve => {
         const r = this.fileService.editDocumentListType(element);
 
-        r.subscribe(resp => {
+        (await r).subscribe(resp => {
           const dOut = resp as boolean;
           if (dOut) {
             loading.dismiss();
