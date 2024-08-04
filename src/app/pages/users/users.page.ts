@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { UtilService } from 'src/app/_services/util.service';
 import { Router } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-users',
@@ -13,7 +14,8 @@ import { Router } from '@angular/router';
 })
 export class UsersPage implements OnInit {
   filteredUsers: any[] = [];
-  constructor(private userService: UserService, public util: UtilService, private router: Router) { }
+  loading: HTMLIonLoadingElement | undefined;
+  constructor(private userService: UserService, public util: UtilService, private router: Router, private loadingController: LoadingController) { }
 
   searchString: any = '';
   dataSource: MatTableDataSource<any> | undefined;
@@ -22,7 +24,11 @@ export class UsersPage implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
   @ViewChild(MatSort) sort: MatSort | undefined;
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.loading = await this.loadingController.create({
+      message: 'Cargando usuarios, por favor espere...'
+    });
+    await this.loading.present();
     this.getUsers();
     this.dataSource = new MatTableDataSource(this.users);
     this.dataSource.paginator = this.paginator!;
@@ -78,6 +84,8 @@ export class UsersPage implements OnInit {
         this.filteredUsers = this.users;
         if (this.dataSource) {
           this.dataSource.data = this.users;
+          this.loading?.dismiss();
+
         }
       },
       (error) => {
