@@ -15,12 +15,17 @@ import { AuthenticationService } from 'src/app/_services/authentication.service'
 export class HeaderComponent {
   @Input() showBackButton: boolean = false;
   @Input() showExitButton: boolean = false;
+  @Input() isDirector: boolean = false;
   @Input() imageUrl: string = '../../../assets/logo.jpg';
 
   constructor(private router: Router, private authService: AuthenticationService) { }
 
   navigateToRoot() {
     this.router.navigateByUrl('/');
+  }
+
+  navigateToUserProfile() {
+    this.router.navigateByUrl('/users');
   }
 
   logout() {

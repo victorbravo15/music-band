@@ -9,10 +9,12 @@ import { AuthenticationService } from 'src/app/_services/authentication.service'
   styleUrls: ['home.page.scss']
 })
 export class HomePage implements OnInit {
+  isDirector: boolean = false;
   constructor(private router: Router, private storage: Storage, public authService: AuthenticationService) {
   }
 
   async ngOnInit() {
+    this.isDirector = await this.authService.isRole('DIRECTOR');
     this.instrumentos.forEach(async element => {
       element.avaliable = await this.authService.isRole(element.instrument);
     });

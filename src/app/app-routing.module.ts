@@ -23,7 +23,11 @@ const routes: Routes = [
     path: 'instrument-list',
     loadChildren: () => import('./pages/instrument-list/instrument-list.module').then(m => m.InstrumentListPageModule),
     canLoad: [AuthGuard]
+  },  {
+    path: 'users',
+    loadChildren: () => import('./pages/users/users.module').then( m => m.UsersPageModule)
   }
+
 
 ];
 @NgModule({
